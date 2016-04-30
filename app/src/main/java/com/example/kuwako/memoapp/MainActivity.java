@@ -1,5 +1,9 @@
 package com.example.kuwako.memoapp;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,9 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public abstract class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    private SimpleCursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "トーストなう", Toast.LENGTH_LONG).show();
             }
         });
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -49,5 +57,30 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String[] projection = {
+                MemoContract.Memos._ID,
+                MemoContract.Memos.COL_TITLE,
+                MemoContract.Memos.COL_UPDATED
+        };
+        return new CursorLoader(
+                this,
+                MemoContentProvider.CONTENT_URI,
+                projection,
+                null,
+                null,
+                MemoContract.Memos.COL_UPDATED + " DESC"
+        );
+    }
 
+    @Override
+    public void onLoadFinished(android.content.Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(android.content.Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+    }
 }
