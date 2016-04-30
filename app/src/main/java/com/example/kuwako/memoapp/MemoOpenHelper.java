@@ -22,7 +22,7 @@ public class MemoOpenHelper extends SQLiteOpenHelper {
             "insert into memos (title, body) values " +
                     "('title1', 'Sinanju'), " +
                     "('title2', 'Rick Dias'), " +
-                    "('title3', 'Sasabi')";
+                    "('title3', 'Sazabi')";
     public static final String DROP_TABLE =
             "drop table if exists " + MemoContract.Memos.TABLE_NAME;
 
