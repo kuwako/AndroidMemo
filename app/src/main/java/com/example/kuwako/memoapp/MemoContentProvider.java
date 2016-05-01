@@ -4,11 +4,12 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 public class MemoContentProvider extends ContentProvider {
     public static final String AUTHORITY = "com.example.kuwako.memoapp.MainActivity.MemoContentProvider";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + MemoContract.Memos.TABLE_NAME);
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + MemoContract.Memos.TABLE_NAME);
 
     private static final int MEMOS = 1;
     private static final int MEMO_ITEM = 2;
@@ -18,6 +19,7 @@ public class MemoContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, MemoContract.Memos.TABLE_NAME, MEMOS);
         uriMatcher.addURI(AUTHORITY, MemoContract.Memos.TABLE_NAME + "/#", MEMO_ITEM);
     }
+    private MemoOpenHelper memoOpenHelper;
 
     public MemoContentProvider() {
     }
@@ -37,21 +39,36 @@ public class MemoContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public boolean onCreate() {
-        // TODO: Implement this to initialize your content provider on startup.
-        return false;
+        memoOpenHelper = new MemoOpenHelper(getContext());
+        return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+        switch(uriMatcher.match(uri)) {
+            case MEMOS:
+            case MEMO_ITEM:
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid URI: " + uri);
+        }
+        SQLiteDatabase db = memoOpenHelper.getReadableDatabase();
+        Cursor c = db.query(
+                MemoContract.Memos.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        return c;
     }
 
     @Override
