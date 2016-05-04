@@ -23,7 +23,12 @@
             android:name=".MemoContentProvider"
             android:authorities="com.example.kuwako.memoapp.MainActivity.MemoContentProvider"
             android:enabled="true"
-            android:exported="false"></provider>
+            android:exported="false" />
+
+        <activity
+            android:name=".FormActivity"
+            android:label="@string/title_activity_form"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
