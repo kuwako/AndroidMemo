@@ -1,6 +1,7 @@
 package com.example.kuwako.memoapp;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class FormActivity extends AppCompatActivity {
     private long memoId;
@@ -109,6 +115,22 @@ public class FormActivity extends AppCompatActivity {
     }
 
     private void saveMemo() {
+        String title = titleText.getText().toString().trim();
+        String body = bodyText.getText().toString().trim();
+        String updated = new SimpleDateFormat("yyyy-mm-dd kk:mm:ss", Locale.US).format(new Date());
 
+        if (title.isEmpty()) {
+            Toast.makeText(FormActivity.this, "title is empty.", Toast.LENGTH_SHORT).show();
+        } else {
+            ContentValues values = new ContentValues();
+            values.put(MemoContract.Memos.COL_TITLE, title);
+            values.put(MemoContract.Memos.COL_BODY, body);
+            values.put(MemoContract.Memos.COL_UPDATED, updated);
+            if (memoId == 0L) {
+                // new memo
+            } else {
+                // update memo
+            }
+        }
     }
 }
