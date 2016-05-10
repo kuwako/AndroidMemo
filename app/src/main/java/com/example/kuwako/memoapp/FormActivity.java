@@ -90,7 +90,7 @@ public class FormActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_form, menu);
         return true;
     }
 
@@ -130,7 +130,18 @@ public class FormActivity extends AppCompatActivity {
                 // new memo
             } else {
                 // update memo
+                Uri uri = ContentUris.withAppendedId(
+                        MemoContentProvider.CONTENT_URI,
+                        memoId
+                );
+                getContentResolver().update(
+                        uri,
+                        values,
+                        MemoContract.Memos._ID + " = ?",
+                        new String[] { Long.toString(memoId) }
+                );
             }
+            finish();
         }
     }
 }

@@ -68,13 +68,26 @@ public class MemoContentProvider extends ContentProvider {
                 null,
                 sortOrder
         );
+        c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (uriMatcher.match(uri) != MEMO_ITEM) {
+            throw new IllegalArgumentException("Invalid URI: " + uri);
+        }
+
+        SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
+        int updatedCount = db.update(
+                MemoContract.Memos.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+        );
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return updatedCount;
     }
 }
