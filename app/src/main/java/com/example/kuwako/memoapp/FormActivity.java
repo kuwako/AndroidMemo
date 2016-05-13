@@ -2,12 +2,14 @@ package com.example.kuwako.memoapp;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -111,6 +113,25 @@ public class FormActivity extends AppCompatActivity {
     }
 
     private void deleteMemo() {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Memo")
+                .setMessage("Are you sure?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = ContentUris.withAppendedId(
+                                MemoContentProvider.CONTENT_URI,
+                                memoId
+                        );
+                        getContentResolver().delete(
+                                uri,
+                                MemoContract.Memos._ID + " = ?",
+                                new String[] { Long.toString(memoId) }
+                        );
+                        finish();
+                    }
+                });
 
     }
 
