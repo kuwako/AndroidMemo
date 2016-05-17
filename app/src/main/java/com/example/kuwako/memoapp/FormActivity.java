@@ -149,6 +149,10 @@ public class FormActivity extends AppCompatActivity {
             values.put(MemoContract.Memos.COL_UPDATED, updated);
             if (memoId == 0L) {
                 // new memo
+                getContentResolver().insert(
+                        MemoContentProvider.CONTENT_URI,
+                        values
+                );
             } else {
                 // update memo
                 Uri uri = ContentUris.withAppendedId(

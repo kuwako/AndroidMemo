@@ -1,6 +1,7 @@
 package com.example.kuwako.memoapp;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -50,7 +51,23 @@ public class MemoContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        if (uriMatcher.match(uri) != MEMOS) {
+            throw new IllegalArgumentException("Invalid URI: " + uri);
+        }
+
+        SQLiteDatabase db = memoOpenHelper.getWritableDatabase();
+        long newId = db.insert(
+                MemoContract.Memos.TABLE_NAME,
+                null,
+                values
+        );
+        Uri newUri = ContentUris.withAppendedId(
+                MemoContentProvider.CONTENT_URI,
+                newId
+        );
+        getContext().getContentResolver().notifyChange(newUri, null);
+
+        return newUri;
     }
 
     @Override

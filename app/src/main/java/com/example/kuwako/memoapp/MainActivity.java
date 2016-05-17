@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         String[] from = {
                 MemoContract.Memos.COL_TITLE,
                 MemoContract.Memos.COL_UPDATED
@@ -67,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            Intent intent = new Intent(this, FormActivity.class);
+            startActivity(intent);
             return true;
         }
 
