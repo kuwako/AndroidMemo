@@ -55,8 +55,15 @@ public class FormActivity extends AppCompatActivity {
 
         if (memoId == 0) {
             // new memo
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("New Memo");
+            }
+            updatedText.setText("Updated: ------");
         } else {
             // show memo
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle("Edit Memo");
+            }
             Uri uri = ContentUris.withAppendedId(
                     MemoContentProvider.CONTENT_URI,
                     memoId
@@ -88,6 +95,13 @@ public class FormActivity extends AppCompatActivity {
 
             c.close();
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem deleteItem = menu.findItem(R.id.action_delete);
+        if (memoId == 0L) deleteItem.setVisible(false);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -138,7 +152,7 @@ public class FormActivity extends AppCompatActivity {
     private void saveMemo() {
         String title = titleText.getText().toString().trim();
         String body = bodyText.getText().toString().trim();
-        String updated = new SimpleDateFormat("yyyy-mm-dd kk:mm:ss", Locale.US).format(new Date());
+        String updated = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss", Locale.US).format(new Date());
 
         if (title.isEmpty()) {
             Toast.makeText(FormActivity.this, "title is empty.", Toast.LENGTH_SHORT).show();
